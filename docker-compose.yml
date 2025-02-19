@@ -1,0 +1,31 @@
+services:
+  currencyconverter.webapi:
+    image: ${DOCKER_REGISTRY-}currencyconverterwebapi
+    build:
+      context: .
+      dockerfile: CurrencyConverter.WebAPI/Dockerfile
+    ports:
+        - "5000:5000"
+        - "5001:5001"
+
+  converter.db:
+    image: postgres:latest
+    container_name: converter.db
+    environment:
+        - POSTGRES_DB=converter
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+    volumes:
+        - ./.containers/converter-db:/var/lib/postgresql/data
+    ports:
+        - 5432:5432
+   
+  converter.seq:
+    image: datalust/seq:latest
+    container_name: converter-seq
+    environment:
+        - ACCEPT_EULA=Y
+    ports:
+        - 5341:5341
+        - 8081:80
+    
